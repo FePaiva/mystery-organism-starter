@@ -13,8 +13,19 @@ const mockUpStrand = () => {
   return newStrand;
 };
 
-function pAequorFactory(num, dnaArray) {
+const pAequorFactory = (number, dnaArray) => {
   
+  return {
+    specimenNum: number,
+    dna: dnaArray,
+    mutate() {
+      let selectedDNA = Math.floor(Math.random() * 15)
+      let changingDNA = this.dna[selectedDNA]
+      let removedBases = dnaBases.filter(element => element !== changingDNA)
+      this.dna[selectedDNA] = removedBases[Math.floor(Math.random() * 3)]
+      return this.dna;
+    }
+  }
 };
 
 
