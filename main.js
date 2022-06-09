@@ -58,8 +58,69 @@ const pAequorFactory = (number, baseArray) => {
         return Math.floor((countCG / this.dna.length) * 100) >= 60;
       }
     },
+    complementStrand() {
+      let compStrand = [];
+      if (this.dna.length != 15) {
+        console.log("Invalid sample length.");
+      } else {
+        this.dna.forEach((base) => {
+          switch (base) {
+            case "A":
+              compStrand.push("T");
+              break;
+            case "T":
+              compStrand.push("A");
+              break;
+            case "C":
+              compStrand.push("G");
+              break;
+            case "G":
+              compStrand.push("C");
+              break;
+            default:
+              console.log("Invalid base detected!");
+          }
+        });
+        return compStrand;
+      }
+    },
   };
 };
+//Create function that returns an array of 30 pAequor samples that are likely to survive
+const pAequorIntances = () => {
+  let samples = [];
+  let sampleIndex = 1;
+  while (samples.length < 30) {
+    let currentSample = pAequorFactory(sampleIndex, mockUpStrand());
+    if (currentSample.willLikelySurvive()) {
+      samples.push(currentSample);
+    }
+    sampleIndex++;
+  }
+  return samples;
+};
+
+// Function to find most related instances of pAequor in the sample set
+const findMostRelated = (pAequorSet) => {
+  let testSet = pAequorSet;
+  let currentMaxPct = 0;
+  let currentS1;
+  let currentS2;
+  while (testSet.length > 1) {
+    let currentSample = testSet.pop();
+    for (let i = 0; i < testSet.length; i++) {
+      if (currentSample.compareDNA(testSet[i]) > currentMaxPct) {
+        currentMaxPct = currentSample.compareDNA(testSet[i]);
+        currentS1 = currentSample;
+        currentS2 = testSet[i];
+      }
+    }
+  }
+  console.log(
+    `The most related specimens are #${currentS2.specimenNum} and #${currentS1.specimenNum} having ${currentMaxPct}% DNA in common.`
+  );
+};
+// Tests
 const testP = pAequorFactory(3, mockUpStrand());
 console.log(testP.dna);
 testP.mutate();
@@ -67,9 +128,9 @@ const testP2 = pAequorFactory(2, mockUpStrand());
 console.log(testP2.dna);
 testP.compareDNA(testP2);
 console.log(testP2.willLikelySurvive());
-// const sampleSet = buildSampleSet();
-// console.log(sampleSet.length);
-// console.log(sampleSet[25]);
-// console.log(sampleSet[25].willLikelySurvive());
-// console.log(testP.complementStrand());
-// findMostRelated(sampleSet);
+const samples = pAequorIntances();
+console.log(samples.length);
+console.log(samples[25]);
+console.log(samples[25].willLikelySurvive());
+console.log(testP.complementStrand());
+findMostRelated(samples);
