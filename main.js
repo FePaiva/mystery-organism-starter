@@ -13,21 +13,24 @@ const mockUpStrand = () => {
   return newStrand;
 };
 
-const pAequorFactory = (number, dnaArray) => {
-  
+const pAequorFactory = (number, baseArray) => {
   return {
     specimenNum: number,
-    dna: dnaArray,
+    dna: baseArray,
     mutate() {
-      let selectedDNA = Math.floor(Math.random() * 15)
-      let changingDNA = this.dna[selectedDNA]
-      let removedBases = dnaBases.filter(element => element !== changingDNA)
-      this.dna[selectedDNA] = removedBases[Math.floor(Math.random() * 3)]
-      return this.dna;
-    }
-  }
+      //randomaly select a base in the dna property and replace it with a random different value
+      const randNumber = Math.floor(Math.random() * this.dna.length);
+      let randBase = returnRandBase();
+      //ensures new value is different
+      while (this.dna[randNumber] === randBase) {
+        randBase = returnRandBase();
+      }
+      this.dna[randIndex] = randBase;
+    },
+  };
 };
-
+const testP = pAequorFactory(2, mockUpStrand());
+console.log(testP.dna);
 
 
 
